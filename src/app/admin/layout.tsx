@@ -1,7 +1,13 @@
 import "~/styles/globals.css";
-
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
+import {
+  ClerkProvider,
+  RedirectToSignIn,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
 
 import { TRPCReactProvider } from "~/trpc/react";
 import { AuroraBackground } from "~/components/ui/aurora-background";
@@ -28,7 +34,18 @@ export default function RootLayout({
         >
           <DarkModeToggle />
           <AuroraBackground>
-            <TRPCReactProvider>{children}</TRPCReactProvider>
+            <TRPCReactProvider>
+              {" "}
+              <ClerkProvider>
+                <SignedIn>
+                  <UserButton /> {children}
+                </SignedIn>
+                <SignedOut>
+                  {/* Redirect to sign-in page if not signed in */}
+                  <RedirectToSignIn />
+                </SignedOut>
+              </ClerkProvider>
+            </TRPCReactProvider>
           </AuroraBackground>
         </ThemeProvider>
       </body>
